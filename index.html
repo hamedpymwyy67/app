@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hami Artan Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: Tahoma, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border: 1px solid #d4af37;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        h1 { color: #d4af37; font-size: 20px; margin-bottom: 5px; }
+        .status {
+            display: inline-block;
+            background-color: #2e7d32;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .btn {
+            background: linear-gradient(45deg, #d4af37, #aa7c11);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🏛️ اکوسیستم معاملاتی حامی آرتان</h1>
+        <p style="font-size: 12px; color: #aaa;">Hami Artan Automated Trading Ecosystem</p>
+        <div class="status">🟢 اتصال به متاتریدر ۵ فعال است</div>
+        
+        <div style="text-align: right; margin-top: 15px; font-size: 13px; line-height: 1.8;">
+            <p>📊 <strong>نماد فعال:</strong> XAUUSD (طلا)</p>
+            <p>🛡️ <strong>مدیریت ریسک:</strong> فعال (Kill-Switch OK)</p>
+            <p>⚡ <strong>اکسپرت فعال:</strong> HamiArtanBridge.mq5</p>
+        </div>
+
+        <button class="btn" onclick="Telegram.WebApp.close()">خروج / بستن مینی‌آپ</button>
+    </div>
+
+    <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+    </script>
+</body>
+</html>
