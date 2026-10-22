@@ -3,220 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hami Artan Trading Dashboard</title>
+    <title>Hami Artan Super App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --gold-primary: #d4af37;
-            --gold-gradient: linear-gradient(135deg, #f39c12, #d4af37);
+            --gold-light: #f39c12;
             --bg-dark: #121212;
             --card-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --green-status: #2e7d32;
-            --red-alert: #c62828;
+            --text-main: #e0e0e0;
+            --text-sub: #888888;
+            --green: #2e7d32;
+            --red: #c62828;
+            --border-color: #2a2a2a;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: var(--text-color);
-            font-family: Tahoma, 'Segoe UI', Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            font-family: Tahoma, 'Segoe UI', Geneva, sans-serif;
             margin: 0;
-            padding: 12px;
+            padding: 0 0 75px 0;
             box-sizing: border-box;
             direction: rtl;
+            user-select: none;
         }
 
-        .header-card {
-            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
-            border: 1px solid var(--gold-primary);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
-            margin-bottom: 12px;
+        /* Top Header */
+        .app-header {
+            background: linear-gradient(180deg, #1f1f1f, #121212);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        h1 {
+        .brand-title {
+            font-size: 15px;
+            font-weight: bold;
             color: var(--gold-primary);
-            font-size: 18px;
-            margin: 0 0 5px 0;
-        }
-
-        .sub-title {
-            font-size: 11px;
-            color: #888;
-            margin-bottom: 10px;
         }
 
         .status-badge {
-            display: inline-block;
-            background-color: var(--green-status);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
+            background-color: rgba(46, 125, 50, 0.2);
+            border: 1px solid var(--green);
+            color: #81c784;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
         }
 
-        /* بخش آمار حساب */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 12px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
             margin-bottom: 12px;
         }
 
-        .stat-box {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .stat-title {
-            font-size: 11px;
-            color: #aaa;
-        }
-
-        .stat-value {
+        .card-title {
+            color: var(--gold-primary);
             font-size: 14px;
             font-weight: bold;
-            color: var(--gold-primary);
-            margin-top: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        /* چارت زنده */
-        .chart-container {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 12px;
-            overflow: hidden;
-            height: 350px;
-            margin-bottom: 12px;
-        }
-
-        /* دکمه‌های معاملات و فرمان */
-        .action-grid {
+        /* Grids */
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 12px;
         }
 
-        .btn-trade {
-            border: none;
-            padding: 12px;
+        .stat-card {
+            background: #181818;
+            border: 1px solid #282828;
             border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #fff;
-            cursor: pointer;
+            padding: 10px;
+            text-align: center;
         }
 
-        .btn-buy { background-color: #2e7d32; }
-        .btn-sell { background-color: #c62828; }
-
-        .btn-full {
-            width: 100%;
-            background: var(--gold-gradient);
-            color: #000;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
-
-        /* بخش سیگنال‌ها و تحلیل */
-        .info-card {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        .info-card h3 {
+        .stat-val {
             color: var(--gold-primary);
+            font-weight: bold;
             font-size: 14px;
-            margin: 0 0 8px 0;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
+            margin-top: 4px;
         }
+
+        .stat-lbl {
+            color: var(--text-sub);
+            font-size: 11px;
+        }
+
+        /* Buttons */
+        .btn-action {
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn-buy { background: var(--green); color: #fff; }
+        .btn-sell { background: var(--red); color: #fff; }
+        .btn-gold { background: linear-gradient(135deg, var(--gold-light), var(--gold-primary)); color: #000; }
+
+        /* Chart */
+        .chart-frame {
+            height: 360px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Video Card */
+        .video-card {
+            background: #181818;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .video-thumb {
+            width: 100%;
+            height: 140px;
+            background: #252525;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--gold-primary);
+            margin-bottom: 8px;
+            border: 1px dashed var(--gold-primary);
+        }
+
+        /* AI Chat Interface */
+        .chat-box {
+            background: #151515;
+            border: 1px solid #282828;
+            border-radius: 10px;
+            height: 250px;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        .chat-msg {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 85%;
+            line-height: 1.5;
+        }
+        .chat-bot {
+            background: #222;
+            color: var(--gold-primary);
+            border: 1px solid #333;
+            margin-left: auto;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 6px;
+        }
+        .chat-input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1a1a1a;
+            border-top: 1px solid var(--gold-primary);
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 4px;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            font-size: 9px;
+            text-decoration: none;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--gold-primary);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .list-item {
+            border-bottom: 1px solid #282828;
+            padding: 8px 0;
+            font-size: 12px;
+        }
+        .list-item:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
-    <!-- هدر اصلی -->
-    <div class="header-card">
-        <h1>🏛️ داشبورد معاملاتی حامی آرتان</h1>
-        <div class="sub-title">Hami Artan Pro Trading Ecosystem</div>
-        <div class="status-badge">🟢 متاتریدر ۵ متصل است</div>
+    <!-- Header -->
+    <div class="app-header">
+        <div class="brand-title">🏛️ اکوسیستم حامی آرتان</div>
+        <div class="status-badge">🟢 MT5 Connected</div>
     </div>
 
-    <!-- آمار و وضعیت حساب -->
-    <div class="stats-grid">
-        <div class="stat-box">
-            <div class="stat-title">نماد فعال</div>
-            <div class="stat-value">XAUUSD (طلا)</div>
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+        <div class="grid-2">
+            <div class="stat-card">
+                <div class="stat-lbl">نماد فعال</div>
+                <div class="stat-val">XAUUSD (طلا)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-lbl">مدیریت ریسک</div>
+                <div class="stat-val" style="color:#81c784;">Kill-Switch OK</div>
+            </div>
         </div>
-        <div class="stat-box">
-            <div class="stat-title">مدیریت ریسک</div>
-            <div class="stat-value" style="color: #4caf50;">Kill-Switch OK</div>
+
+        <div class="card">
+            <div class="card-title">📈 نمودار زنده معاملاتی</div>
+            <div class="chart-frame">
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                    <div id="tradingview_main" style="height:100%;width:100%"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({
+                        "autosize": true,
+                        "symbol": "OANDA:XAUUSD",
+                        "interval": "15",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "fa_IR",
+                        "toolbar_bg": "#121212",
+                        "enable_publishing": false,
+                        "hide_top_toolbar": false,
+                        "container_id": "tradingview_main"
+                    });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <button class="btn-action btn-buy" onclick="alert('دستور خرید ارسال شد')">📈 خرید سریع (BUY)</button>
+            <button class="btn-action btn-sell" onclick="alert('دستور فروش ارسال شد')">📉 فروش سریع (SELL)</button>
         </div>
     </div>
 
-    <!-- چارت زنده طلا -->
-    <div class="chart-container">
-        <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container" style="height:100%;width:100%">
-          <div id="tradingview_xau" style="height:calc(100% - 32px);width:100%"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-          <script type="text/javascript">
-          new TradingView.widget(
-          {
-          "autosize": true,
-          "symbol": "OANDA:XAUUSD",
-          "interval": "15",
-          "timezone": "Etc/UTC",
-          "theme": "dark",
-          "style": "1",
-          "locale": "en",
-          "toolbar_bg": "#f1f3f6",
-          "enable_publishing": false,
-          "hide_top_toolbar": false,
-          "save_image": false,
-          "container_id": "tradingview_xau"
-        }
-          );
-          </script>
+    <!-- TAB 2: WALLET & ACCOUNT -->
+    <div id="tab-wallet" class="tab-content">
+        <div class="card">
+            <div class="card-title">💼 وضعیت حساب و کیف پول</div>
+            <div class="grid-2" style="margin-top:10px;">
+                <div class="stat-card">
+                    <div class="stat-lbl">موجودی (Balance)</div>
+                    <div class="stat-val">$10,000.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">سود/زیان زنده (PnL)</div>
+                    <div class="stat-val" style="color:#81c784;">+$320.50</div>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="stat-card">
+                    <div class="stat-lbl">مارجین آزاد</div>
+                    <div class="stat-val">$8,450.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">لورج حساب</div>
+                    <div class="stat-val">1:500</div>
+                </div>
+            </div>
         </div>
-        <!-- TradingView Widget END -->
+
+        <div class="card">
+            <div class="card-title">📊 پوزیشن‌های باز متاتریدر</div>
+            <div class="list-item">🟢 BUY 0.10 Lot XAUUSD @ 2735.20 | PnL: +$140.00</div>
+            <div class="list-item">🟢 BUY 0.05 Lot XAUUSD @ 2738.10 | PnL: +$180.50</div>
+        </div>
     </div>
 
-    <!-- دکمه‌های عملیاتی -->
-    <div class="action-grid">
-        <button class="btn-trade btn-buy" onclick="alert('دستور خرید ارسال شد')">📈 ثبت خرید (BUY)</button>
-        <button class="btn-trade btn-sell" onclick="alert('دستور فروش ارسال شد')">📉 ثبت فروش (SELL)</button>
+    <!-- TAB 3: TECHNICAL ANALYSIS -->
+    <div id="tab-technical" class="tab-content">
+        <div class="card">
+            <div class="card-title">📊 تحلیل تکنیکال زنده (SMC / ICT)</div>
+            <div class="list-item">🎯 <strong>بلاک سفارش (Order Block):</strong> محدوده 2728 - 2732 حمایت قوی</div>
+            <div class="list-item">⚡ <strong>خلاء قیمتی (FVG):</strong> محدوده 2745 هدف صعودی کوتاه مدت</div>
+            <div class="list-item">🔄 <strong>تغییر ماهیت (CHoCH):</strong> روند ۱_ساعته کاملا صعودی</div>
+        </div>
+        <div class="card">
+            <div class="card-title">🤖 سیگنال‌های هوشمند اکسپرت</div>
+            <div class="list-item">✅ سیگنال خرید طلا در ۲۰ دقیقه پیش (تایید شده)</div>
+            <div class="list-item">⏳ انتظار برای اصلاح قیمت جهت ورود مجدد</div>
+        </div>
     </div>
 
-    <!-- تحلیل و هشدار استراتژی -->
-    <div class="info-card">
-        <h3>⚡ وضعیت اکسپرت و تحلیل زنده</h3>
-        <p>• <strong>اکسپرت فعال:</strong> HamiArtanBridge.mq5</p>
-        <p>• <strong>استراتژی:</strong> SMC + روند چارت ۱۵ دقیقه</p>
-        <p>• <strong>هشدار:</strong> خروج اضطراری در صورت تغییر روند فعال است.</p>
+    <!-- TAB 4: ACADEMY & VIDEOS -->
+    <div id="tab-academy" class="tab-content">
+        <div class="card">
+            <div class="card-title">🎓 آکادمی آموزش و ویدیوهای اختصاصی</div>
+            
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:13px; color:var(--gold-primary);">آموزش کندل‌خوانی و تشخیص روند طلا</div>
+                <div style="font-size:11px; color:#aaa; margin-top:4px;">مدت زمان: ۱۵ دقیقه | دوره جامع SMC</div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:13px; color:var(--gold-primary);">تنظیم اکسپرت HamiArtanBridge و مدیریت ریسک</div>
+                <div style="font-size:11px; color:#aaa; margin-top:4px;">مدت زمان: ۱۰ دقیقه | آموزش راه اندازی</div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:13px; color:var(--gold-primary);">استراتژی معامله با FVG و Order Block</div>
+                <div style="font-size:11px; color:#aaa; margin-top:4px;">مدت زمان: ۲۰ دقیقه | کارگاه عملی</div>
+            </div>
+        </div>
     </div>
 
-    <button class="btn-full" style="margin-top: 12px;" onclick="Telegram.WebApp.close()">بستن داشبورد</button>
+    <!-- TAB 5: AI SUPPORT -->
+    <div id="tab-support" class="tab-content">
+        <div class="card">
+            <div class="card-title">🤖 پشتیبانی هوشمند حامی آرتان</div>
+            <p style="font-size:11px; color:#aaa; margin-bottom:10px;">پاسخگویی ۲۴ ساعته هوش مصنوعی به سوالات معاملاتی و تنظیمات</p>
+            
+            <div class="chat-box" id="chatBox">
+                <div class="chat-msg chat-bot">سلام حامد عزیز! 👋 من دستیار هوشمند اکوسیستم حامی آرتان هستم. چه کمکی در زمینه تحلیل، اکسپرت یا آموزش‌ها می‌توانم به شما بکنم؟</div>
+            </div>
+
+            <div class="chat-input-row">
+                <input type="text" id="userInput" class="chat-input" placeholder="سوال خود را بنویسید...">
+                <button class="btn-action btn-gold" style="width:70px; margin:0;" onclick="sendAiMessage()">ارسال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: FUNDAMENTAL -->
+    <div id="tab-news" class="tab-content">
+        <div class="card">
+            <div class="card-title">📰 تقویم اقتصادی و اخبار فاندامنتال</div>
+            <div class="list-item">🔴 <strong>16:00:</strong> شاخص ادعای بیمه بیکاری آمریکا (USD) - اهمیت بالا</div>
+            <div class="list-item">🟡 <strong>18:30:</strong> سخنرانی رئیس فدرال رزرو (تأثیر مستقیم بر طلا)</div>
+            <div class="list-item">🟢 <strong>تحلیل فاندامنتال:</strong> تقاضای طلا در بازار جهانی صعودی ارزیابی می‌شود.</div>
+        </div>
+    </div>
+
+    <!-- TAB 7: SETTINGS -->
+    <div id="tab-settings" class="tab-content">
+        <div class="card">
+            <div class="card-title">⚙️ تنظیمات ربات و اکسپرت MT5</div>
+            <p style="font-size:12px; color:#aaa;">مدیریت اکسپرت HamiArtanBridge.mq5</p>
+            <button class="btn-action btn-gold" style="margin-bottom:10px;" onclick="alert('حد ضرر اضطراری فعال شد')">🛑 فعال‌سازی Kill-Switch اضطراری</button>
+            <button class="btn-action btn-gold" onclick="Telegram.WebApp.close()">❌ بستن برنامه</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('tab-dashboard', this)">
+            <div class="nav-icon">📈</div>
+            <div>داشبورد</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-wallet', this)">
+            <div class="nav-icon">💼</div>
+            <div>کیف‌پول</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-technical', this)">
+            <div class="nav-icon">📊</div>
+            <div>تکنیکال</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-academy', this)">
+            <div class="nav-icon">🎓</div>
+            <div>آموزش</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-support', this)">
+            <div class="nav-icon">🤖</div>
+            <div>پشتیبانی</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-news', this)">
+            <div class="nav-icon">📰</div>
+            <div>اخبار</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-settings', this)">
+            <div class="nav-icon">⚙️</div>
+            <div>تنظیمات</div>
+        </div>
+    </div>
 
     <script>
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
+
+        function switchTab(tabId, element) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            if(!input.value.trim()) return;
+
+            const userText = input.value;
+            chatBox.innerHTML += `<div class="chat-msg" style="background:#2b2b2b; color:#fff; margin-right:auto;">${userText}</div>`;
+            input.value = '';
+
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="chat-msg chat-bot">در حال بررسی سوال شما درباره "${userText}"... سیستم پشتیبانی هوشمند حامی آرتان پاسخ مناسب را آماده می‌کند.</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 600);
+        }
     </script>
 </body>
 </html>
