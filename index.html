@@ -1,6 +1,4 @@
-
-
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -74,3 +72,290 @@
             margin-bottom: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
+
+        .card-title {
+            color: var(--gold-light);
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+        .stat-card {
+            background: #0d0d10;
+            border: 1px solid #22222a;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-val { color: var(--gold-primary); font-weight: bold; font-size: 14px; margin-top: 4px; }
+        .stat-lbl { color: var(--text-sub); font-size: 11px; }
+
+        .btn-action {
+            width: 100%; border: none; padding: 12px; border-radius: 10px;
+            font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-buy { background: linear-gradient(135deg, #2e7d32, #00e676); color: #000; }
+        .btn-sell { background: linear-gradient(135deg, #c62828, #ff5252); color: #fff; }
+        .btn-gold { background: var(--gold-gradient); color: #000; font-weight: bold; }
+
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-sub); margin-bottom: 4px; }
+        .form-control {
+            width: 100%; background: #0d0d10; border: 1px solid #333340;
+            color: #fff; padding: 10px; border-radius: 8px; font-family: inherit; box-sizing: border-box;
+        }
+
+        .chart-frame { height: 350px; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); }
+
+        .chat-box {
+            background: #0d0d10; border: 1px solid #22222a; border-radius: 10px;
+            height: 240px; padding: 10px; overflow-y: auto; margin-bottom: 10px; font-size: 12px;
+        }
+        .chat-msg { margin-bottom: 10px; padding: 10px 12px; border-radius: 10px; max-width: 88%; line-height: 1.6; }
+        .chat-bot { background: #1a1a22; color: var(--gold-light); border: 1px solid var(--card-border); margin-left: auto; }
+        .chat-user { background: #22222d; color: #fff; margin-right: auto; }
+
+        .video-card {
+            background: #0d0d10; border: 1px solid #22222a; border-radius: 10px; padding: 10px; margin-bottom: 10px;
+        }
+        .video-thumb {
+            width: 100%; height: 90px; background: #1a1a22; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; color: var(--gold-primary); margin-bottom: 8px;
+            border: 1px dashed var(--gold-primary);
+        }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #0a0a0c; border-top: 1px solid var(--gold-primary);
+            display: flex; justify-content: space-between; padding: 8px 4px; z-index: 1000;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 9px; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--gold-primary); font-weight: bold; }
+        .nav-icon { font-size: 16px; margin-bottom: 2px; }
+        .list-item { border-bottom: 1px solid #1a1a22; padding: 8px 0; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        <div class="brand-title">🏛️ اکوسیستم حامی آرتان</div>
+        <div class="status-badge">🟢 MT5 Connected</div>
+    </div>
+
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+        <div class="grid-2">
+            <div class="stat-card">
+                <div class="stat-lbl">نماد فعال</div>
+                <div class="stat-val">XAUUSD (طلا)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-lbl">مدیریت ریسک</div>
+                <div class="stat-val" style="color:var(--green);">Kill-Switch OK</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📈 نمودار زنده معاملاتی طلا</div>
+            <div class="chart-frame">
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                    <div id="tradingview_main" style="height:100%;width:100%"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({
+                        "autosize": true,
+                        "symbol": "OANDA:XAUUSD",
+                        "interval": "15",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "fa_IR",
+                        "toolbar_bg": "#0a0a0c",
+                        "enable_publishing": false,
+                        "container_id": "tradingview_main"
+                    });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: SMART TRADE -->
+    <div id="tab-smarttrade" class="tab-content">
+        <div class="card">
+            <div class="card-title">⚡ پنل معامله هوشمند (Smart Trade)</div>
+            
+            <div class="form-group">
+                <label>حجم معامله (Lot):</label>
+                <input type="number" id="tradeLot" class="form-control" value="0.01" step="0.01">
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>حد ضرر (SL):</label>
+                    <input type="number" id="tradeSL" class="form-control" placeholder="2725.00">
+                </div>
+                <div class="form-group">
+                    <label>حد سود (TP):</label>
+                    <input type="number" id="tradeTP" class="form-control" placeholder="2755.00">
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:15px;">
+                <button class="btn-action btn-buy" onclick="executeSmartTrade('BUY')">📈 معامله هوشمند خرید</button>
+                <button class="btn-action btn-sell" onclick="executeSmartTrade('SELL')">📉 معامله هوشمند فروش</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: WALLET -->
+    <div id="tab-wallet" class="tab-content">
+        <div class="card">
+            <div class="card-title">💼 وضعیت حساب و کیف پول</div>
+            <div class="grid-2">
+                <div class="stat-card">
+                    <div class="stat-lbl">موجودی (Balance)</div>
+                    <div class="stat-val">$10,000.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">سود/زیان زنده (PnL)</div>
+                    <div class="stat-val" style="color:var(--green);">+$320.50</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: AI SUPPORT -->
+    <div id="tab-support" class="tab-content">
+        <div class="card">
+            <div class="card-title">🤖 پشتیبانی هوشمند (Gemini AI)</div>
+            <div class="chat-box" id="chatBox">
+                <div class="chat-msg chat-bot">سلام حامد عزیز! 👋 من پشتیبان هوشمند حامی آرتان هستم. هر سوالی درباره ثبت‌نام، واریز/برداشت، اتصال به مینی‌آپ یا تحلیل طلا داری بپرس.</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+                <input type="text" id="userInput" class="form-control" placeholder="سوال خود را بنویسید...">
+                <button class="btn-action btn-gold" style="width:75px;" onclick="sendAiMessage()">ارسال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: ACADEMY -->
+    <div id="tab-academy" class="tab-content">
+        <div class="card">
+            <div class="card-title">🎓 آکادمی آموزش و راهنمای کامل</div>
+            
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۱. آموزش ثبت‌نام و احراز هویت در بروکر</div>
+                <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">مراحل ارسال مدارک و تایید سریع حساب کاربری</div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۲. ساخت حساب معاملاتی Real / Demo</div>
+                <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">تنظیم لورج و دریافت لاگین متاتریدر ۵</div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۳. نحوه اتصال حساب متاتریدر به مینی‌آپ تلگرام</div>
+                <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">راهنمای گام به گام لینک کردن حساب با ربات حامی آرتان</div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۴. آموزش واریز سریع (ریالی و تتر USDT)</div>
+                <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">شارژ آنی حساب معاملاتی از طریق کریپتو یا درگاه</div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">▶️</div>
+                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۵. آموزش ثبت درخواست برداشت وجه از بروکر</div>
+                <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">تسویه حساب و واریز مستقیم به کیف پول یا کارت</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: SETTINGS -->
+    <div id="tab-settings" class="tab-content">
+        <div class="card">
+            <div class="card-title">⚙️ تنظیمات و خروج اضطراری</div>
+            <button class="btn-action btn-gold" style="margin-bottom:10px;" onclick="alert('Kill-Switch فعال شد!')">🛑 فعال‌سازی Kill-Switch اضطراری</button>
+            <button class="btn-action btn-gold" onclick="Telegram.WebApp.close()">❌ بستن برنامه</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('tab-dashboard', this)">
+            <div class="nav-icon">📈</div><div>داشبورد</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-smarttrade', this)">
+            <div class="nav-icon">⚡</div><div>معامله‌هوشمند</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-wallet', this)">
+            <div class="nav-icon">💼</div><div>کیف‌پول</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-support', this)">
+            <div class="nav-icon">🤖</div><div>پشتیبان‌هوشمند</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-academy', this)">
+            <div class="nav-icon">🎓</div><div>آموزش</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('tab-settings', this)">
+            <div class="nav-icon">⚙️</div><div>تنظیمات</div>
+        </div>
+    </div>
+
+    <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        function executeSmartTrade(type) {
+            const lot = document.getElementById('tradeLot').value;
+            alert(`دستور هوشمند ${type} با حجم ${lot} لات به متاتریدر ۵ ارسال شد.`);
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const q = input.value.trim();
+            if(!q) return;
+
+            chatBox.innerHTML += `<div class="chat-msg chat-user">${q}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            let reply = "در حال تحلیل سوال شما...";
+            if(q.includes("اتصال") || q.includes("وصل")) {
+                reply = "برای وصل کردن حساب متاتریدر ۵ به مینی‌آپ، به بخش 'آموزش' رفته و ویدئوی شماره ۳ (راهنمای اتصال) را مشاهده کنید.";
+            } else if(q.includes("واریز") || q.includes("برداشت")) {
+                reply = "آموزش شارژ تتر و واریز/برداشت در ویدئوهای ۴ و ۵ بخش 'آموزش' به صورت گام به گام قرار گرفته است.";
+            } else if(q.includes("طلا") || q.includes("روند")) {
+                reply = "روند طلا (XAUUSD) در تایم M15 صعودی ارزیابی می‌شود. محدوده حمایتی اصلی در ۲۷۲۸ دلار است.";
+            } else {
+                reply = `درباره "${q}": تمامی ابزارهای آموزشی، معامله هوشمند و واریز/برداشت در تب‌های مربوطه آماده استفاده هستند.`;
+            }
+
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="chat-msg chat-bot">${reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 600);
+        }
+    </script>
+</body>
+</html>
