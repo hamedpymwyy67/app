@@ -21,7 +21,6 @@
 
         body {
             background-color: var(--bg-dark);
-            /* تصویر پس‌زمینه باستانی تخت جمشید و طلا */
             background-image: linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.95)), url('https://images.unsplash.com/photo-1608481337062-4093bf3ed404?q=80&w=1000&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
@@ -50,7 +49,7 @@
         }
 
         .brand-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
@@ -105,12 +104,38 @@
         .stat-val { color: var(--gold-primary); font-weight: bold; font-size: 14px; margin-top: 4px; }
         .stat-lbl { color: var(--text-sub); font-size: 11px; }
 
+        .trade-item {
+            background: rgba(15, 15, 20, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trade-info { font-size: 12px; line-height: 1.5; }
+        .trade-symbol { font-weight: bold; color: var(--gold-light); }
+        .trade-pnl { font-weight: bold; font-size: 13px; text-align: left; }
+        .pnl-green { color: var(--green); }
+        .pnl-red { color: var(--red); }
+
+        .btn-close-trade {
+            background: rgba(198, 40, 40, 0.2);
+            border: 1px solid var(--red);
+            color: var(--red);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
         .btn-action {
             width: 100%; border: none; padding: 12px; border-radius: 10px;
             font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s;
         }
-        .btn-buy { background: linear-gradient(135deg, #2e7d32, #00e676); color: #000; }
-        .btn-sell { background: linear-gradient(135deg, #c62828, #ff5252); color: #fff; }
         .btn-gold { background: var(--gold-gradient); color: #000; font-weight: bold; }
 
         .form-control {
@@ -118,7 +143,7 @@
             color: #fff; padding: 10px; border-radius: 8px; font-family: inherit; box-sizing: border-box;
         }
 
-        .chart-frame { height: 350px; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); }
+        .chart-frame { height: 320px; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); }
 
         .chat-box {
             background: rgba(13, 13, 16, 0.9); border: 1px solid var(--card-border); border-radius: 10px;
@@ -128,20 +153,15 @@
         .chat-bot { background: rgba(26, 26, 34, 0.9); color: var(--gold-light); border: 1px solid var(--card-border); margin-left: auto; }
         .chat-user { background: rgba(34, 34, 45, 0.9); color: #fff; margin-right: auto; }
 
-        .video-card {
-            background: rgba(13, 13, 16, 0.8); border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 10px; padding: 10px; margin-bottom: 10px;
-        }
-
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(10, 10, 12, 0.95); border-top: 1px solid var(--gold-primary);
-            display: flex; justify-content: space-between; padding: 8px 4px; z-index: 1000;
+            display: flex; justify-content: space-between; padding: 8px 2px; z-index: 1000;
             backdrop-filter: blur(10px);
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 9px; cursor: pointer; flex: 1; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 8px; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--gold-primary); font-weight: bold; }
-        .nav-icon { font-size: 16px; margin-bottom: 2px; }
+        .nav-icon { font-size: 15px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -155,12 +175,12 @@
     <div id="tab-dashboard" class="tab-content active">
         <div class="grid-2">
             <div class="stat-card">
-                <div class="stat-lbl">نماد فعال</div>
-                <div class="stat-val">XAUUSD (طلا)</div>
+                <div class="stat-lbl">سود/زیان کل زنده (PnL)</div>
+                <div class="stat-val pnl-green">+$320.50 📈</div>
             </div>
             <div class="stat-card">
-                <div class="stat-lbl">مدیریت ریسک</div>
-                <div class="stat-val" style="color:var(--green);">Kill-Switch OK</div>
+                <div class="stat-lbl">پوزیشن‌های باز</div>
+                <div class="stat-val">۲ معامله فعال</div>
             </div>
         </div>
 
@@ -192,67 +212,117 @@
     <!-- TAB 2: SMART TRADE -->
     <div id="tab-smarttrade" class="tab-content">
         <div class="card">
-            <div class="card-title">⚡ معامله هوشمند اتوماتیک (مخصوص کاربران)</div>
+            <div class="card-title">⚡ معامله هوشمند اتوماتیک</div>
             <p style="font-size:11px; color:var(--text-sub); line-height:1.5;">
-                در این بخش ربات سیگنال زنده طلا را بر اساس استراتژی SMC و مدیریت ریسک ۱٪ حساب آماده کرده است. نیاز به دانش فنی نیست؛ تنها با زدن دکمه زیر وارد معامله شوید:
+                ربات سیگنال زنده طلا را بر اساس استراتژی SMC آماده کرده است. با زدن دکمه زیر معامله با مدیریت ریسک ارسال می‌شود:
             </p>
             
             <div class="stat-card" style="margin-bottom:12px; text-align:right;">
                 <div style="font-size:12px; color:var(--gold-light);"><strong>سیگنال فعال ربات:</strong> 📈 خرید طلا (BUY XAUUSD)</div>
                 <div style="font-size:11px; color:#aaa; margin-top:4px;">محدوده ورود: 2735.00 | حد ضرر: 2728.00 | حد سود: 2750.00</div>
-                <div style="font-size:11px; color:var(--green); margin-top:2px;">حجم هوشمند محاسبه‌شده: 0.01 لات (ریسک ۱٪)</div>
+                <div style="font-size:11px; color:var(--green); margin-top:2px;">حجم هوشمند: 0.01 لات (ریسک ۱٪)</div>
             </div>
 
             <button class="btn-action btn-gold" onclick="alert('معامله هوشمند با موفقیت به متاتریدر ۵ ارسال شد!')">⚡ اجرای یک‌کلیکه معامله هوشمند</button>
         </div>
     </div>
 
-    <!-- TAB 3: WALLET -->
+    <!-- TAB 3: WALLET & OPEN POSITIONS -->
     <div id="tab-wallet" class="tab-content">
         <div class="card">
-            <div class="card-title">💼 وضعیت حساب و کیف پول</div>
+            <div class="card-title">💼 خلاصه وضعیت حساب متاتریدر ۵</div>
             <div class="grid-2">
                 <div class="stat-card">
                     <div class="stat-lbl">موجودی (Balance)</div>
                     <div class="stat-val">$10,000.00</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-lbl">سود/زیان زنده (PnL)</div>
-                    <div class="stat-val" style="color:var(--green);">+$320.50</div>
+                    <div class="stat-lbl">سود/زیان کل پوزیشن‌ها</div>
+                    <div class="stat-val pnl-green">+$320.50</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 پوزیشن‌ها و معاملات باز زنده</div>
+            <div class="trade-item">
+                <div class="trade-info">
+                    <div class="trade-symbol">📈 BUY 0.10 Lot XAUUSD</div>
+                    <div style="color:var(--text-sub); font-size:11px;">ورود: 2735.20 | فعلی: 2749.20</div>
+                </div>
+                <div>
+                    <div class="trade-pnl pnl-green">+$140.00</div>
+                    <button class="btn-close-trade" onclick="alert('پوزیشن بسته‌شد.')">بستن پوزیشن</button>
+                </div>
+            </div>
+            <div class="trade-item">
+                <div class="trade-info">
+                    <div class="trade-symbol">📈 BUY 0.05 Lot XAUUSD</div>
+                    <div style="color:var(--text-sub); font-size:11px;">ورود: 2738.10 | فعلی: 2749.20</div>
+                </div>
+                <div>
+                    <div class="trade-pnl pnl-green">+$180.50</div>
+                    <button class="btn-close-trade" onclick="alert('پوزیشن بسته‌شد.')">بستن پوزیشن</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 4: AI SUPPORT -->
-    <div id="tab-support" class="tab-content">
+    <!-- TAB 4: TRADING JOURNAL -->
+    <div id="tab-journal" class="tab-content">
         <div class="card">
-            <div class="card-title">🤖 پشتیبانی هوشمند (Gemini AI)</div>
-            <div class="chat-box" id="chatBox">
-                <div class="chat-msg chat-bot">سلام حامد عزیز! 👋 من پشتیبان هوشمند حامی آرتان هستم. هر سوالی درباره معامله هوشمند، نحوه ثبت‌نام/واریز بروکر یا تحلیل طلا داری بپرس.</div>
+            <div class="card-title">📓 ژورنال و آمار عملکرد معاملات</div>
+            <div class="grid-2">
+                <div class="stat-card">
+                    <div class="stat-lbl">نرخ برد (Win Rate)</div>
+                    <div class="stat-val" style="color:var(--green);">82%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">مجموع سود بسته‌شده</div>
+                    <div class="stat-val pnl-green">+$1,450.00</div>
+                </div>
             </div>
-            <div style="display:flex; gap:6px;">
-                <input type="text" id="userInput" class="form-control" placeholder="سوال خود را بنویسید...">
-                <button class="btn-action btn-gold" style="width:75px;" onclick="sendAiMessage()">ارسال</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📜 تاریخچه معاملات گذشته (Journal History)</div>
+            
+            <div class="trade-item">
+                <div class="trade-info">
+                    <div class="trade-symbol">✅ BUY XAUUSD (تاره رسیده به TP)</div>
+                    <div style="color:var(--text-sub); font-size:10px;">استراتژی: SMC Order Block | تاریخ: دیروز</div>
+                </div>
+                <div class="trade-pnl pnl-green">+$210.00</div>
+            </div>
+
+            <div class="trade-item">
+                <div class="trade-info">
+                    <div class="trade-symbol">✅ BUY XAUUSD (تایید CHoCH)</div>
+                    <div style="color:var(--text-sub); font-size:10px;">استراتژی: Scalp | تاریخ: ۲ روز پیش</div>
+                </div>
+                <div class="trade-pnl pnl-green">+$185.00</div>
+            </div>
+
+            <div class="trade-item">
+                <div class="trade-info">
+                    <div class="trade-symbol">❌ SELL XAUUSD (حد ضرر خورده)</div>
+                    <div style="color:var(--text-sub); font-size:10px;">استراتژی: Breakout | تاریخ: ۳ روز پیش</div>
+                </div>
+                <div class="trade-pnl pnl-red">-$45.00</div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 5: ACADEMY -->
-    <div id="tab-academy" class="tab-content">
+    <!-- TAB 5: AI SUPPORT -->
+    <div id="tab-support" class="tab-content">
         <div class="card">
-            <div class="card-title">🎓 آکادمی و راهنمای ویدئویی</div>
-            <div class="video-card">
-                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۱. آموزش ثبت‌نام و احراز هویت در بروکر</div>
+            <div class="card-title">🤖 پشتیبانی هوشمند (Gemini AI)</div>
+            <div class="chat-box" id="chatBox">
+                <div class="chat-msg chat-bot">سلام حامد عزیز! 👋 من پشتیبان هوشمند حامی آرتان هستم. هر سوالی درباره ژورنال، معاملات باز، یا ثبت‌نام بروکر داری بپرس.</div>
             </div>
-            <div class="video-card">
-                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۲. ساخت حساب Real / Demo و دریافت لاگین MT5</div>
-            </div>
-            <div class="video-card">
-                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۳. نحوه اتصال حساب متاتریدر به مینی‌آپ تلگرام</div>
-            </div>
-            <div class="video-card">
-                <div style="font-weight:bold; font-size:12px; color:var(--gold-light);">۴. آموزش واریز و برداشت سریع (تتر / ریالی)</div>
+            <div style="display:flex; gap:6px;">
+                <input type="text" id="userInput" class="form-control" placeholder="سوال خود را بنویسید...">
+                <button class="btn-action btn-gold" style="width:75px;" onclick="sendAiMessage()">ارسال</button>
             </div>
         </div>
     </div>
@@ -277,11 +347,11 @@
         <div class="nav-item" onclick="switchTab('tab-wallet', this)">
             <div class="nav-icon">💼</div><div>کیف‌پول</div>
         </div>
-        <div class="nav-item" onclick="switchTab('tab-support', this)">
-            <div class="nav-icon">🤖</div><div>پشتیبان‌هوشمند</div>
+        <div class="nav-item" onclick="switchTab('tab-journal', this)">
+            <div class="nav-icon">📓</div><div>ژورنال</div>
         </div>
-        <div class="nav-item" onclick="switchTab('tab-academy', this)">
-            <div class="nav-icon">🎓</div><div>آموزش</div>
+        <div class="nav-item" onclick="switchTab('tab-support', this)">
+            <div class="nav-icon">🤖</div><div>پشتیبان</div>
         </div>
         <div class="nav-item" onclick="switchTab('tab-settings', this)">
             <div class="nav-icon">⚙️</div><div>تنظیمات</div>
@@ -312,16 +382,12 @@
             let reply = "";
             const lowerQ = q.toLowerCase();
 
-            if(lowerQ.includes("معامله") || lowerQ.includes("ترید") || lowerQ.includes("توضیح")) {
-                reply = "در بخش 'معامله هوشمند'، ربات سیگنال‌های تایید شده طلا را به صورت خودکار آماده می‌کند. اگر سواد ترید ندارید، فقط کافیست دکمه 'اجرای یک‌کلیکه' را بزنید تا با مدیریت ریسک ۱٪ وارد معامله شوید.";
-            } else if(lowerQ.includes("سلام") || lowerQ.includes("درود")) {
-                reply = "درود بر شما حامد عزیز! خوش آمدید. چطور می‌توانم در زمینه معاملات طلا، اکسپرت یا ثبت‌نام بروکر راهنماییتان کنم؟";
-            } else if(lowerQ.includes("بروکر") || lowerQ.includes("ثبت نام") || lowerQ.includes("واریز")) {
-                reply = "برای ثبت‌نام، واریز تتر/ریالی و دریافت لاگین متاتریدر ۵، می‌توانید ویدئوهای گام به گام در تب 'آموزش' را مشاهده کنید.";
-            } else if(lowerQ.includes("طلا") || lowerQ.includes("تحلیل")) {
-                reply = "روند معاملاتی طلا (XAUUSD) صعودی است و ربات در محدوده‌های Order Block بهترین نقطه ورود را پیشنهاد می‌دهد.";
+            if(lowerQ.includes("ژورنال") || lowerQ.includes("تاریخچه") || lowerQ.includes("آمار")) {
+                reply = "در تب 'ژورنال'، وین‌ریت (Win Rate) و گزارش کامل سود و زیان معاملات قبلی شما ثبت شده است.";
+            } else if(lowerQ.includes("معامله") || lowerQ.includes("پوزیشن")) {
+                reply = "پوزیشن‌های باز و سود لحظه‌ای در تب 'کیف‌پول' آماده مدیریت و بستن سریع است.";
             } else {
-                reply = `درباره "${q}": تمامی ابزارهای مدیریتی، معامله هوشمند و آموزش‌ها در تب‌های پایین مینی‌آپی در دسترس شماست.`;
+                reply = `درباره "${q}": تمامی ابزارهای ژورنال، معامله هوشمند و تحلیل در مینی‌آپ حامی آرتان به صورت زنده در دسترس است.`;
             }
 
             setTimeout(() => {
